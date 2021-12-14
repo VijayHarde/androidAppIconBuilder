@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./index.css" />
+    <title>Document</title>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <script src="./index.js"></script>
+    <script src="./html2canvas.js"></script>
+    <script>
+      function capture() {
+        var circle = document.getElementById("circle");
+        var square = document.getElementById("img");
+        circle.style.border = "none";
+        square.style.border = "none";
+        html2canvas(square).then(function (canvas) {
+          console.log(canvas);
+          canvas.toBlob((blob) => {
+            console.log(blob);
+            const elem = window.document.createElement("a");
+            elem.href = window.URL.createObjectURL(blob);
+            elem.download = "image-download.png";
+            document.body.appendChild(elem);
+            elem.click();
+            document.body.removeChild(elem);
+            circle.style.border = "1px solid gray";
+            square.style.border = "1px solid gray";
+          });
+        });
+      }
+
+      function readURL(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            console.log(e.target.result);
+            document
+              .getElementById("img1")
+              .setAttribute("src", e.target.result);
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
+      function resizeImg() {
+        var value = document.getElementById("ranger").value;
+        var image = document.getElementById("img1");
+        console.log(value);
+        //  image.style.transform = `scale(${value / 10})`;
+        image.style.width = value + "%";
+        image.style.height = value + "%";
+      }
+    </script>
+  </head>
+  <body>
+
+    <div class="square" id="img">
+      <div class="circle" id="circle">
+        <div class="small-square"></div>
+        <!-- <img src="" id="img1" style="margin: 50%;" height="75%" width="75%"> -->
+      </div>
+    </div> 
+
+     <input type="file" accept="image/*" onchange="readURL(this)" />
+    <button onclick="capture()">Download</button>
+    <input id="ranger" type="range" min="1" max="100" onchange="resizeImg()"/>
+  </body>
+</html>
